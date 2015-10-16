@@ -14,6 +14,7 @@ class MP4Remuxer {
     this.PES2MP4SCALEFACTOR = 4;
     this.PES_TIMESCALE = 90000;
     this.MP4_TIMESCALE = this.PES_TIMESCALE / this.PES2MP4SCALEFACTOR;
+    this._initRawPTS = undefined;
   }
 
   get timescale() {
@@ -141,6 +142,9 @@ class MP4Remuxer {
       }
       pts = avcSample.pts - this._initDTS;
       dts = avcSample.dts - this._initDTS;
+      if (this._initRawPTS == undefined) {
+        this._initRawPTS = avcSample.pts;
+      }
       //logger.log('Video/PTS/DTS:' + pts + '/' + dts);
       // if not first AVC sample of video track, normalize PTS/DTS with previous sample value
       // and ensure that sample duration is positive
@@ -236,8 +240,11 @@ class MP4Remuxer {
       startDTS: firstDTS / pesTimeScale,
       endDTS: (dtsnorm + pes2mp4ScaleFactor * mp4Sample.duration) / pesTimeScale,
       type: 'video',
-      nb: samples.length
+      nb: samples.length,
+      startRawPTS: this._initRawPTS
     });
+
+    this._initRawPTS = undefined;
   }
 
   remuxAudio(track,timeOffset) {

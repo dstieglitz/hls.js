@@ -831,6 +831,7 @@ class BufferController {
   }
 
   onFragLoaded(event, data) {
+//    console.log(data);
     var fragCurrent = this.fragCurrent;
     if (this.state === this.LOADING &&
         fragCurrent &&
@@ -902,6 +903,7 @@ class BufferController {
   }
 
   onFragParsing(event, data) {
+    console.log("onFragParsing "+data.startRawPTS);
     if (this.state === this.PARSING) {
       this.tparse2 = Date.now();
       var level = this.levels[this.level],
@@ -911,7 +913,10 @@ class BufferController {
       this.mp4segments.push({type: data.type, data: data.moof});
       this.mp4segments.push({type: data.type, data: data.mdat});
       this.nextLoadPosition = data.endPTS;
-      this.bufferRange.push({type: data.type, start: data.startPTS, end: data.endPTS, frag: frag});
+      if (data.startRawPTS != undefined) {
+        frag.startRawPTS = data.startRawPTS;
+      }
+      this.bufferRange.push({type: data.type, start: data.startPTS, end: data.endPTS, frag: frag, startRawPTS: data.startRawPTS});
 
       //trigger handler right now
       this.tick();

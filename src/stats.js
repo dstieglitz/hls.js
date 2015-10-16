@@ -47,8 +47,11 @@ class StatsHandler {
 
   // on fragment changed is triggered whenever playback of a new fragment is starting ...
   onFragmentChanged(event, data) {
+    console.log(data);
     var stats = this._stats, level = data.frag.level, autoLevel = data.frag.autoLevel;
     if (stats) {
+      console.log("setting raw PTS " + data.frag.startRawPTS);
+      stats.rawPTS = data.frag.startRawPTS;
       if (stats.levelStart === undefined) {
         stats.levelStart = level;
       }
@@ -170,7 +173,7 @@ class StatsHandler {
 
   get stats() {
     if (this.video) {
-      this._stats.lastPos = this.video.currentTime.toFixed(3);
+        this._stats.lastPos = this.video.currentTime.toFixed(3);
     }
     return this._stats;
   }

@@ -47,7 +47,7 @@ class Demuxer {
   }
 
   onWorkerMessage(ev) {
-    //console.log('onWorkerMessage:' + ev.data.event);
+    console.log('onWorkerMessage:' + ev.data.startRawPTS);
     switch(ev.data.event) {
       case Event.FRAG_PARSING_INIT_SEGMENT:
         var obj = {};
@@ -73,7 +73,8 @@ class Demuxer {
           startDTS: ev.data.startDTS,
           endDTS: ev.data.endDTS,
           type: ev.data.type,
-          nb: ev.data.nb
+          nb: ev.data.nb,
+          startRawPTS: ev.data.startRawPTS
         });
         break;
         case Event.FRAG_PARSING_METADATA:
