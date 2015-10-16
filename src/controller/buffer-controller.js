@@ -202,9 +202,9 @@ class BufferController {
           if (levelDetails.live) {
             // check if requested position is within seekable boundaries :
             //logger.log(`start/pos/bufEnd/seeking:${start.toFixed(3)}/${pos.toFixed(3)}/${bufferEnd.toFixed(3)}/${this.video.seeking}`);
-            if (bufferEnd < start) {
+            if (bufferEnd < Math.max(start,end-this.config.liveMaxLatencyDurationCount*levelDetails.targetduration)) {
                 this.seekAfterBuffered = start + Math.max(0, levelDetails.totalduration - this.config.liveSyncDurationCount * levelDetails.targetduration);
-                logger.log(`buffer end: ${bufferEnd} is located before start of live sliding playlist, media position will be reseted to: ${this.seekAfterBuffered.toFixed(3)}`);
+                logger.log(`buffer end: ${bufferEnd} is located too far from the end of live sliding playlist, media position will be reseted to: ${this.seekAfterBuffered.toFixed(3)}`);
                 bufferEnd = this.seekAfterBuffered;
             }
             if (this.startFragmentRequested && !levelDetails.PTSKnown) {
@@ -423,7 +423,7 @@ class BufferController {
         i;
     var buffered2 = [];
     // there might be some small holes between buffer time range
-    // consider that holes smaller than 300 ms are irrelevant and build another
+    // consider that holes smaller than maxHoleDuration are irrelevant and build another
     // buffer time range representations that discards those holes
     for (i = 0; i < buffered.length; i++) {
       //logger.log('buf start/end:' + buffered.start(i) + '/' + buffered.end(i));
