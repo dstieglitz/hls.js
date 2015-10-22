@@ -143,7 +143,7 @@ class MP4Remuxer {
       pts = avcSample.pts - this._initDTS;
       dts = avcSample.dts - this._initDTS;
       if (this._initRawPTS == undefined) {
-        this._initRawPTS = avcSample.pts;
+        this._initRawPTS = avcSample.rawPts;
       }
       //logger.log('Video/PTS/DTS:' + pts + '/' + dts);
       // if not first AVC sample of video track, normalize PTS/DTS with previous sample value

@@ -191,7 +191,7 @@
   }
 
   _parsePES(stream) {
-    var i = 0, frag, pesFlags, pesPrefix, pesLen, pesHdrLen, pesData, pesPts, pesDts, payloadStartOffset;
+    var i = 0, frag, pesFlags, pesPrefix, pesLen, pesHdrLen, pesData, pesPts, pesDts, payloadStartOffset, rawPesPts;
     //retrieve PTS/DTS from first fragment
     frag = stream.data[0];
     pesPrefix = (frag[0] << 16) + (frag[1] << 8) + frag[2];
@@ -208,6 +208,7 @@
           (frag[12] & 0xFF) * 128 +// 1 << 7
           (frag[13] & 0xFE) / 2;
           // check if greater than 2^32 -1
+          rawPesPts = pesPts;
           if (pesPts > 4294967295) {
             // decrement 2^33
             pesPts -= 8589934592;
@@ -240,7 +241,7 @@
         pesData.set(frag, i);
         i += frag.byteLength;
       }
-      return {data: pesData, pts: pesPts, dts: pesDts, len: pesLen};
+      return {data: pesData, rawPts: rawPesPts, pts: pesPts, dts: pesDts, len: pesLen};
     } else {
       return null;
     }
@@ -320,7 +321,7 @@
     if (units.length) {
       // only push AVC sample if keyframe already found. browsers expect a keyframe at first to start decoding
       if (key === true || track.sps ) {
-        avcSample = {units: units, pts: pes.pts, dts: pes.dts, key: key};
+        avcSample = {units: units, rawPts: pes.rawPts, pts: pes.pts, dts: pes.dts, key: key};
         this._avcTrack.samples.push(avcSample);
         this._avcTrack.len += units.length;
         this._avcTrack.nbNalu += units.units.length;
