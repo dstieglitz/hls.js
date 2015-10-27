@@ -47,10 +47,10 @@ class StatsHandler {
 
   // on fragment changed is triggered whenever playback of a new fragment is starting ...
   onFragmentChanged(event, data) {
-    console.log(data);
+//    console.log(data);
     var stats = this._stats, level = data.frag.level, autoLevel = data.frag.autoLevel;
     if (stats) {
-      console.log("setting raw PTS " + data.frag.startRawPTS);
+//      console.log("setting raw PTS " + data.frag.startRawPTS);
       stats.rawPTS = data.frag.startRawPTS;
       if (stats.levelStart === undefined) {
         stats.levelStart = level;

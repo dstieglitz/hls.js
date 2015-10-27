@@ -903,7 +903,7 @@ class BufferController {
   }
 
   onFragParsing(event, data) {
-    console.log("onFragParsing "+data.startRawPTS);
+//    console.log("onFragParsing "+data.startRawPTS);
     if (this.state === this.PARSING) {
       this.tparse2 = Date.now();
       var level = this.levels[this.level],

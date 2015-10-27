@@ -47,7 +47,7 @@ class Demuxer {
   }
 
   onWorkerMessage(ev) {
-    console.log('onWorkerMessage:' + ev.data.startRawPTS);
+//    console.log('onWorkerMessage:' + ev.data.startRawPTS);
     switch(ev.data.event) {
       case Event.FRAG_PARSING_INIT_SEGMENT:
         var obj = {};
